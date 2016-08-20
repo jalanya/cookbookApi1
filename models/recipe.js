@@ -1,4 +1,4 @@
-var recipeList = [
+const recipeList = [
         {
           id: 1,
           name: 'Ceviche',
@@ -219,4 +219,4 @@ var recipeList = [
         }
       ];
 
-module.exports = recipeList;
+export default { recipeList }
