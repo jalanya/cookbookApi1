@@ -1,6 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import recipeCtrl from './models/recipe';
+import * as dal from './models/recipe';
+
+const getAllRecipes = async (req, res) => {
+    var recipes =  await dal.getRecipeList2(req, res);
+    res.json(recipes);
+}
 
 const app = express();
 
@@ -20,13 +25,12 @@ router.get('/', function (req, res) {
     res.json({message: 'Welcome to our Cookbook Api1'});
 });
 
-router.route('/recipes')
-    .get(function(req, res) {
-        res.json(recipeCtrl.recipeList);
-     });
+router.route('/recipes').get(getAllRecipes);
 
 app.use('/api', router);
 
 app.listen(port);
 
 console.log('Cookbook Api1 on port ' + port);
+
+export default app;
