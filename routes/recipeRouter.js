@@ -7,9 +7,14 @@ const getAllRecipes = async (req, res) => {
     res.json(recipes);
 }
 
-const addRecipe = async (req, res) => {
+const saveRecipe = async (req, res) => {
 
-    let recipe = {id:0,
+    let id = 0;
+
+    if (req.body.id > 0)
+        id = req.body.id;
+
+    let recipe = {id,
                 name: req.body.name,
                 category: req.body.category,
                 chef: req.body.chef,
@@ -18,10 +23,17 @@ const addRecipe = async (req, res) => {
                 status: 'active'
     }
     try {
-      let result =  await dal.insertRecipe(req.body);
+
+      let result;
+
+      if (id === 0)
+        result =  await dal.insertRecipe(req.body);
+      else
+        result =  await dal.updateRecipe(req.body);
+
       recipe.id = result[0];
 
-    }catch(err) {
+    } catch(err) {
       console.log("Error: " + err);
     }
 
@@ -34,11 +46,44 @@ const addRecipe = async (req, res) => {
     res.json(responseMessage);
 }
 
+const removeRecipe = async (req, res) => {
+
+    let recipe = {id: req.params.id}
+
+    let responseMessage = {message: 'success', data:[]}
+
+    try {
+
+      let result =  await dal.deleteRecipe(req.params.id);
+
+      recipe.id = result[0];
+
+    } catch(err) {
+      console.log("Error: " + err);
+      responseMessage = {
+                          message: 'Error: ' + err,
+                          data: recipe
+                        };
+    } finally {
+      responseMessage = {
+                          message: 'success',
+                          data: recipe
+                        };
+    }
+
+    console.log("responseMessage : " + responseMessage);
+
+    res.json(responseMessage);
+}
+
 
 let recipeRouter = express.Router();
 
 recipeRouter.route('/recipes')
               .get(getAllRecipes)
-              .post(addRecipe);
+              .post(saveRecipe);
+
+recipeRouter.route('/recipes/:id')
+              .delete(removeRecipe);
 
 export default recipeRouter;
