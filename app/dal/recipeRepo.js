@@ -3,7 +3,6 @@ import { runInTransaction } from '../database/factory';
 
 const getRecipeList = async (req, res) => {
     const results = await knex.raw("SELECT id, name, category, chef, ingredients::jsonb, status FROM recipe WHERE status='active'");
-    console.log(results.rows);
     res.send(results.rows);
 }
 

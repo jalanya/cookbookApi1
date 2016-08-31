@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import recipeRouter from './app/routes/recipeRouter';
+import categoryRouter from './app/routes/categoryRouter';
 import cors from 'cors';
 
 const app = express();
@@ -24,6 +25,7 @@ router.get('/', function (req, res) {
 
 app.use('/', router);
 app.use('/api', recipeRouter);
+app.use('/api', categoryRouter);
 
 app.listen(port);
 
