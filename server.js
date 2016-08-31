@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import recipeRouter from './routes/recipeRouter';
+import recipeRouter from './app/routes/recipeRouter';
 import cors from 'cors';
 
 const app = express();

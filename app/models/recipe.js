@@ -1,6 +1,4 @@
-import express from 'express';
-import knex from 'knex';
-import * as dal from '../models/recipe';
+import * as dal from '../dal/recipeRepo';
 
 const getAllRecipes = async (req, res) => {
     let recipes =  await dal.getRecipeList(req, res);
@@ -27,9 +25,9 @@ const saveRecipe = async (req, res) => {
       let result;
 
       if (id === 0)
-        result =  await dal.insertRecipe(req.body);
+        result =  await dal.insertEntity(req.body);
       else
-        result =  await dal.updateRecipe(req.body);
+        result =  await dal.updateEntity(req.body);
 
       recipe.id = result[0];
 
@@ -46,6 +44,7 @@ const saveRecipe = async (req, res) => {
     res.json(responseMessage);
 }
 
+
 const removeRecipe = async (req, res) => {
 
     let recipe = {id: req.params.id}
@@ -54,7 +53,7 @@ const removeRecipe = async (req, res) => {
 
     try {
 
-      let result =  await dal.deleteRecipe(req.params.id);
+      let result =  await dal.deleteEntity(req.params.id);
 
       recipe.id = result[0];
 
@@ -76,14 +75,4 @@ const removeRecipe = async (req, res) => {
     res.json(responseMessage);
 }
 
-
-let recipeRouter = express.Router();
-
-recipeRouter.route('/recipes')
-              .get(getAllRecipes)
-              .post(saveRecipe);
-
-recipeRouter.route('/recipes/:id')
-              .delete(removeRecipe);
-
-export default recipeRouter;
+export { getAllRecipes, saveRecipe, removeRecipe };
